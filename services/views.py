@@ -18,7 +18,13 @@ def index(request, id):
 
 
 def create(request):
-    return render(request, 'services/create.html', {})
+    companies = User.objects.filter(is_company=True)
+
+    # Create a list of usernames (or other fields if needed)
+    company_usernames = [company for company in companies]
+
+    # Pass the list to the template
+    return render(request, 'services/create.html', {'company_usernames': company_usernames})
 
 
 def service_field(request, field):
