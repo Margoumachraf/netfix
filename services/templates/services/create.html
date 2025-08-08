@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    {{field}} Services create
+{% endblock %}
+{% block content %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form}}
+        <button type="submit" name="create">Create</button>
+    </form>
+    <p class="helptext">Choose Field Above</p>
+{% endblock %}

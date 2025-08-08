@@ -10,8 +10,9 @@ def register(request):
     return render(request, 'users/register.html')
 
 
+
 class CustomerSignUpView(CreateView):
-    model = User
+    model = Customer
     form_class = CustomerSignUpForm
     template_name = 'users/register_customer.html'
 
@@ -20,13 +21,17 @@ class CustomerSignUpView(CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
+        print(form)
         user = form.save()
         login(self.request, user)
-        return redirect('/')
 
+        # Debug: print submitted data
+        # print("Customer Signup POST data:", self.request.POST)
+
+        return redirect('/')  # Replace 'home' with your actual success page
 
 class CompanySignUpView(CreateView):
-    model = User
+    model = User  # or Company if you created a separate model
     form_class = CompanySignUpForm
     template_name = 'users/register_company.html'
 
@@ -35,10 +40,28 @@ class CompanySignUpView(CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
+        print("Company Signup POST data:", self.request.POST)
+
         user = form.save()
         login(self.request, user)
-        return redirect('/')
+
+        # Example of accessing data from the form/request
+        company_name = self.request.POST.get('company_name')
+        email = self.request.POST.get('email')
+        print("Company Name:", company_name)
+        print("Email:", email)
+
+        return redirect('home')  # Replace 'home' with your actual success page
+
 
 
 def LoginUserView(request):
-    pass
+    if request.method == 'POST':
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('/')
+    else:
+        form = UserLoginForm()
+    return render(request, 'users/login.html', {'form': form})

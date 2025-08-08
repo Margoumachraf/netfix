@@ -26,7 +26,7 @@ urlpatterns = [
     path('services/', include('services.urls')),
     path('register/', include('users.urls')),
     # path('customer/<slug:name>', v.customer_profile, name='customer_profile'),
-    # path('company/<slug:name>', v.company_profile, name='company_profile')
+    path('company/<slug:name>', v.company_profile, name='company_profile')
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)

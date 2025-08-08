@@ -18,11 +18,37 @@ def validate_email(value):
 
 
 class CustomerSignUpForm(UserCreationForm):
-    pass
+    email = forms.EmailField(required=True, validators=[validate_email])
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_company = True
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+            Company.objects.create(user=user)
+        return user
 
 
 class CompanySignUpForm(UserCreationForm):
-    pass
+    email = forms.EmailField(required=True, validators=[validate_email])
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_company = True
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+            Company.objects.create(user=user)
+        return user
 
 
 class UserLoginForm(forms.Form):
