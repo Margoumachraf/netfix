@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.views.generic import CreateView, TemplateView
-
+from datetime import datetime
 from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm
 from .models import User, Company, Customer
 
@@ -23,15 +23,14 @@ class CustomerSignUpView(CreateView):
     def form_valid(self, form):
         print(form)
         user = form.save()
+        user.is_customer = True
+    
+        
         login(self.request, user)
 
-        # Debug: print submitted data
-        # print("Customer Signup POST data:", self.request.POST)
-
-        return redirect('/')  # Replace 'home' with your actual success page
-
+        return redirect('/')  
 class CompanySignUpView(CreateView):
-    model = User  # or Company if you created a separate model
+    model = Company
     form_class = CompanySignUpForm
     template_name = 'users/register_company.html'
 
@@ -45,23 +44,26 @@ class CompanySignUpView(CreateView):
         user = form.save()
         login(self.request, user)
 
-        # Example of accessing data from the form/request
+       
         company_name = self.request.POST.get('company_name')
         email = self.request.POST.get('email')
         print("Company Name:", company_name)
         print("Email:", email)
 
-        return redirect('home')  # Replace 'home' with your actual success page
-
+        return redirect('/') 
 
 
 def LoginUserView(request):
     if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)
+        form = UserLoginForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('/')
+            user = form.get_user()  
+            if user is not None:  
+                login(request, user) 
+                return redirect('/')
+            else:
+                form.add_error(None, 'Invalid username or password') 
     else:
-        form = UserLoginForm()
+        form = UserLoginForm()  
+
     return render(request, 'users/login.html', {'form': form})

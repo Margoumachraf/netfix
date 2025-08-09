@@ -13,6 +13,6 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ("user", "field")
 
 
-# @admin.register(Customer)
-# class CustomerAdmin(admin.ModelAdmin):
-#     list_display = ("user", "birth")
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ("user", "birth")

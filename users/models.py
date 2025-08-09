@@ -7,12 +7,15 @@ class User(AbstractUser):
     is_company = models.BooleanField(default=False)
     is_customer = models.BooleanField(default=False)
     email = models.CharField(max_length=100, unique=True)
-    # username = models.CharField(max_length=100, unique=False)
 
 
 class Customer(models.Model):
-    pass
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
+    birth = models.DateField()
 
+    def __str__(self):
+        return str(self.user.id) + ' - ' + self.user.username
 
 class Company(models.Model):
     user = models.OneToOneField(
