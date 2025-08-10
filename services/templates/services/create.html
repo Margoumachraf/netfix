@@ -4,38 +4,15 @@
 {% endblock %}
 {% block content %}
 
-<form method="POST" enctype="multipart/form-data">
+<h2>Create a New Service</h2>
+
+<form method="POST">
     {% csrf_token %}
 
-  
-      
+    {{ form.as_p }}
 
-
-        <label for="{{ form.price_hour.id_for_label }}">Price per Hour</label>
-        <input type="text" name="price_hour" id="{{ form.price_hour.id_for_label }}" value="{{ form.price_hour.value }}" class="form-control" step="0.01">
-        <span class="error">{{ form.price_hour.errors }}</span>
-
-
-  <textarea name="description"   >{{ form.description.value }}</textarea>
-        <span class="error">{{ form.description.errors }}</span>
-
-
-        <input type="text" name="rating" id="{{ form.rating.id_for_label }}" value="{{ form.rating.value }}" class="form-control" min="0" max="5">
-        <span class="error">{{ form.rating.errors }}</span>
-
-
-
-
-      
-        <label for="company_username">Select Company</label>
-        <select name="company_username" id="company_username" class="form-control">
-            {% for company in company_usernames %}
-                <option value="{{ company.id }}">{{ company.username }}</option>
-            {% endfor %}
-        </select>
-        <span class="error">{{ form.service_type.errors }}</span>
-
-    <button type="submit" name="create" class="btn btn-primary">Create</button>
+    <!-- Submit Button -->
+    <button name="create" class="btn btn-primary">Create</button>
 </form>
 
 <p class="helptext">Choose the service details above</p>

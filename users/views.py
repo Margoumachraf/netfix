@@ -5,14 +5,13 @@ from datetime import datetime
 from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm
 from .models import User, Company, Customer
 
-
 def register(request):
     return render(request, 'users/register.html')
 
 
 
 class CustomerSignUpView(CreateView):
-    model = Customer
+    model = User
     form_class = CustomerSignUpForm
     template_name = 'users/register_customer.html'
 
@@ -21,16 +20,15 @@ class CustomerSignUpView(CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        print(form)
         user = form.save()
         user.is_customer = True
     
-        
+        user.save()
         login(self.request, user)
 
         return redirect('/')  
 class CompanySignUpView(CreateView):
-    model = Company
+    model = User
     form_class = CompanySignUpForm
     template_name = 'users/register_company.html'
 
@@ -39,30 +37,36 @@ class CompanySignUpView(CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        print("Company Signup POST data:", self.request.POST)
+      
 
         user = form.save()
+        user.is_company = 1
+        user.save()
         login(self.request, user)
 
        
-        company_name = self.request.POST.get('company_name')
-        email = self.request.POST.get('email')
-        print("Company Name:", company_name)
-        print("Email:", email)
 
+    
         return redirect('/') 
 
 
 def LoginUserView(request):
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
+
         if form.is_valid():
-            user = form.get_user()  
-            if user is not None:  
-                login(request, user) 
-                return redirect('/')
-            else:
-                form.add_error(None, 'Invalid username or password') 
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user = authenticate( username=username, password=password)
+            
+            print(user)
+            if user is None:
+                form.add_error(None, "Invalid username or password")
+                return render(request, 'users/login.html', {'form': form})
+            login(request, user) 
+            return redirect('/')
+        
     else:
         form = UserLoginForm()  
 
