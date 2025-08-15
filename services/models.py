@@ -15,6 +15,7 @@ class Service(models.Model):
         0), MaxValueValidator(5)], default=0)
     choices = (
         ('Air Conditioner', 'Air Conditioner'),
+        ('All in One', 'All in One'),
         ('Carpentry', 'Carpentry'),
         ('Electricity', 'Electricity'),
         ('Gardening', 'Gardening'),
