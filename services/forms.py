@@ -1,6 +1,6 @@
 from django import forms
 
-from users.models import Company ,User
+from .models import Type
 
 
 class CreateNewService(forms.Form):
@@ -10,7 +10,7 @@ class CreateNewService(forms.Form):
         decimal_places=2, max_digits=5, min_value=0.00)
     
     field = forms.ChoiceField(
-        choices=[(user.id, user.username) for user in User.objects.filter(is_company=True)],
+        choices=[(type.id, type.name) for type in Type.objects.all()],
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 

@@ -1,6 +1,6 @@
 {% extends 'main/base.html' %}
 {% block title %}
-{{ field }} Services Create
+Services Create
 {% endblock %}
 {% block content %}
 
@@ -9,7 +9,7 @@
 <form method="POST">
     {% csrf_token %}
 
-    {{ form.as_p }}
+    {{ form }}
 
     <!-- Submit Button -->
     <button name="create" class="btn btn-primary">Create</button>
